@@ -47,7 +47,7 @@ for epoch in range(num_epochs):
         optimizer.step()
         running_loss += loss.item()
         train_loader_tqdm.set_postfix(loss=running_loss/(batch_idx + 1))
-    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(train_loader):.4f}')
+    print(f'Epoch [{epoch+1}/{num_epochs}], Train Loss: {running_loss/len(train_loader):.4f}')
     
     # Testing loop
     model.eval()
