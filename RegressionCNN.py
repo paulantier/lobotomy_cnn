@@ -1,21 +1,31 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
-import torch.nn.functional as F
+
 
 class RegressionCNN(nn.Module):
     def __init__(self):
         super(RegressionCNN, self).__init__()
-        resnet34 = models.resnet34(pretrained=True)
+        resnet34 = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1)
+        
+        # Freeze the ResNet34 parameters
+        for param in resnet34.parameters():
+            param.requires_grad = False
+        
         # Use only the feature extraction part of ResNet34
-        self.features = nn.Sequential(*list(resnet34.children())[:-2])
+        self.features = nn.Sequential(*list(resnet34.children())[:-1])
         
         # Add linear regression layers
         self.regression_layers = nn.Sequential(
-            nn.Linear(resnet34.fc.in_features, 512),
-            nn.ReLU(),
+            nn.Linear(resnet34.fc.in_features, 1024),
+            nn.GELU(),
+            nn.Dropout(0.5),
+            nn.Linear(1024, 512),
+            nn.GELU(),
+            nn.Dropout(0.5),
             nn.Linear(512, 256),
-            nn.ReLU(),
+            nn.GELU(),
+            nn.Dropout(0.5),
             nn.Linear(256, 1)
         )
         
