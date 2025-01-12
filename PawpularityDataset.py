@@ -24,6 +24,4 @@ class PawpularityDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        sample = {'image': image, 'pawpularity_score': pawpularity_score}
-
-        return sample
+        return image, pawpularity_score

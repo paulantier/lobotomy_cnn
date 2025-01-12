@@ -33,10 +33,10 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0
-    for images, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
+    for images, score in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
         optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+        predicted_score = model(images)
+        loss = criterion(predicted_score, score)
         loss.backward()
         optimizer.step()
         running_loss += loss.item()

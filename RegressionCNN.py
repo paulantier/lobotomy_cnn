@@ -4,15 +4,15 @@ import torchvision.models as models
 import torch.nn.functional as F
 
 class RegressionCNN(nn.Module):
-    def __init__(self, resnet34):
+    def __init__(self):
         super(RegressionCNN, self).__init__()
-        self.resnet34 = resnet34
+        resnet34 = models.resnet34(pretrained=True)
         # Use only the feature extraction part of ResNet34
-        self.features = nn.Sequential(*list(self.resnet34.children())[:-2])
+        self.features = nn.Sequential(*list(resnet34.children())[:-2])
         
         # Add linear regression layers
         self.regression_layers = nn.Sequential(
-            nn.Linear(self.resnet34.fc.in_features, 512),
+            nn.Linear(resnet34.fc.in_features, 512),
             nn.ReLU(),
             nn.Linear(512, 256),
             nn.ReLU(),
