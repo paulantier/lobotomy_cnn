@@ -3,6 +3,9 @@ dataset/
 test.csv
 train.csv
 
+#Pretrained torch models
+*.pth
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
