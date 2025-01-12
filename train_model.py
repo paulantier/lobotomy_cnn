@@ -16,15 +16,21 @@ num_epochs = 20
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using device: {device}')
 # Define transforms
-transform = transforms.Compose([
+train_transform = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.ToTensor()
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.ToTensor(),
+])
+
+test_transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
 ])
 
 # Load datasets
-train_dataset = PawpularityDataset(csv_file='train.csv', img_dir='dataset/train', transform=transform)
+train_dataset = PawpularityDataset(csv_file='train.csv', img_dir='dataset/train', transform=train_transform)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-test_dataset = PawpularityDataset(csv_file='test.csv', img_dir='dataset/test', transform=transform)
+test_dataset = PawpularityDataset(csv_file='test.csv', img_dir='dataset/test', transform=test_transform)
 test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
 
 # Initialize model, loss function, and optimizer
@@ -61,6 +67,6 @@ for epoch in range(num_epochs):
     
     print(f'Test Loss: {test_loss/len(test_loader):.4f}')
 
-# Save the model
-torch.save(model.state_dict(), 'regression_cnn.pth')
-print("Model saved as regression_cnn.pth")
+    # Save the model
+    torch.save(model.state_dict(), 'regression_cnn.pth')
+    print("Model saved as regression_cnn.pth")
